@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  srp-server:
+    build: .
+    container_name: srp-server
+    ports:
+      - "8080:8080"
+    networks:
+      - srp-network
+    command: java -jar srp-netty.jar server
+
+  srp-client:
+    build: .
+    container_name: srp-client
+    depends_on:
+      - srp-server
+    networks:
+      - srp-network
+    stdin_open: true
+    tty: true
+    command: java -jar srp-netty.jar client srp-server 8080
+
+networks:
+  srp-network:
+    driver: bridge
